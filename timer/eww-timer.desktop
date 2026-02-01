@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=EWW Timer
+Comment=Interactive Countdown Timer with Custom Time Input
+Exec=/home/ig_ro/Документы/eww/timer/timer_toggle.sh
+Icon= stopwatch
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=false

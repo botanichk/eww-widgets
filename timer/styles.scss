@@ -1,0 +1,167 @@
+$count-font-size: 24px;
+$btn-font-size: 14px;
+$padding: 20px;
+
+.countdown-timer {
+  background-color: rgb(33, 33, 37);
+  border-radius: 15px; /* Сильно скругленные углы */
+  padding: $padding;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-family: "Mononoki Nerd Font";
+  color: #D8DEE9;
+}
+
+.timer-display {
+  font-size: $count-font-size;
+  font-weight: bold;
+  color: #81A1C1;
+  margin-bottom: 15px;
+  font-family: "Bitcount Prop Single Light";
+  border-radius: 12px; /* Сильно скругленные углы */
+}
+
+.timer-input-field {
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px; /* Сильно скругленные углы */
+  background-color: rgb(50, 55, 65);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-input-field:focus {
+  background-color: rgb(60, 60, 65);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-input-box {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background-color: rgb(60, 65, 75);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-input-btn {
+  font-size: $btn-font-size;
+  padding: 8px 12px;
+  border-radius: 10px; /* Сильно скругленные углы */
+  background-color: rgb(65, 69, 79);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-input-btn:hover {
+  background-color: rgb(85, 89, 99);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-input-btn:active {
+  background-color: rgb(105, 109, 119);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-preset-btn {
+  font-size: $btn-font-size;
+  padding: 6px 10px;
+  border-radius: 10px; /* Сильно скругленные углы */
+  background-color: rgb(65, 69, 79);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+  min-width: 60px;
+}
+
+.timer-preset-btn:hover {
+  background-color: rgb(85, 89, 99);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-preset-btn:active {
+  background-color: rgb(105, 109, 119);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-btn-start {
+  font-size: $btn-font-size;
+  padding: 10px 15px;
+  border-radius: 10px; /* Сильно скругленные углы */
+  background-color: rgb(46, 160, 67);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+  font-weight: bold;
+}
+
+.timer-btn-start:hover {
+  background-color: rgb(56, 180, 77);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-btn-start:active {
+  background-color: rgb(66, 200, 87);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-btn-reset {
+  font-size: $btn-font-size;
+  padding: 10px 15px;
+  border-radius: 10px; /* Сильно скругленные углы */
+  background-color: rgb(200, 46, 46);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+  font-weight: bold;
+}
+
+.timer-btn-reset:hover {
+  background-color: rgb(220, 66, 66);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-btn-reset:active {
+  background-color: rgb(240, 86, 86);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-close-btn {
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 8px; /* Сильно скругленные углы */
+  background-color: rgb(200, 46, 46);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-close-btn:hover {
+  background-color: rgb(220, 66, 66);
+  border-radius: 8px; /* Сильно скругленные углы */
+}
+
+.timer-selected-box {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: rgb(50, 55, 65);
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-selected-label {
+  font-size: 12px;
+  color: #A0AEC0;
+  font-style: italic;
+  border-radius: 5px; /* Сильно скругленные углы */
+}
+
+.timer-selected-value {
+  font-size: 12px;
+  color: #81A1C1;
+  font-weight: bold;
+  font-family: "Mononoki Nerd Font";
+  border-radius: 5px; /* Сильно скругленные углы */
+}
+
+.timer-presets {
+  margin-bottom: 10px;
+  border-radius: 10px; /* Сильно скругленные углы */
+}
+
+.timer-header {
+  margin-bottom: 10px;
+  border-radius: 10px; /* Сильно скругленные углы */
+}

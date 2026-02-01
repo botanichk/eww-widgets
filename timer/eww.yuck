@@ -1,0 +1,64 @@
+;; Таймер обратного отсчета
+
+(defvar timer_active false)
+(defvar timer_input "")
+
+(defpoll timer_status :interval "1s" "/home/ig_ro/Документы/eww/timer/countdown_timer.sh status")
+
+(defwidget countdown_timer []
+  (box :class "countdown-timer"
+    :orientation "vertical"
+    :spacing 10
+    ;; Кнопка закрытия в правом верхнем углу
+    (box :class "timer-header"
+      :orientation "horizontal"
+      :halign "end"
+      (button :class "timer-close-btn"
+              :onclick "eww -c /home/ig_ro/Документы/eww/timer close timer"
+              "✕"))
+    ;; Отображение времени
+    (label :class "timer-display" :text "${timer_status}")
+    ;; Предустановки времени (скрыты когда таймер активен)
+    (box :class "timer-presets"
+      :orientation "horizontal"
+      :spacing 8
+      (button :class "timer-preset-btn"
+        :onclick "sh -c 'echo \"5m\" > /tmp/timer_input_value && eww -c /home/ig_ro/Документы/eww/timer update timer_input=\"5m\"'"
+        "5 мин")
+      (button :class "timer-preset-btn"
+        :onclick "sh -c 'echo \"10m\" > /tmp/timer_input_value && eww -c /home/ig_ro/Документы/eww/timer update timer_input=\"10m\"'"
+        "10 мин")
+      (button :class "timer-preset-btn"
+        :onclick "sh -c 'echo \"30m\" > /tmp/timer_input_value && eww -c /home/ig_ro/Документы/eww/timer update timer_input=\"30m\"'"
+        "30 мин")
+      (button :class "timer-preset-btn"
+        :onclick "sh -c 'echo \"\" > /tmp/timer_input_value && eww -c /home/ig_ro/Документы/eww/timer update timer_input=\"\"'"
+        "Очистить"))
+    ;; Кнопка для ввода произвольного времени
+    (button :class "timer-preset-btn"
+            :onclick "/home/ig_ro/Документы/eww/timer/yad_input.sh"
+            "Произвольно")
+    ;; Отображение выбранного времени
+    (box :class "timer-selected-box"
+      :orientation "horizontal"
+      :spacing 5
+      (label :class "timer-selected-label" :text "Выбрано:")
+      (label :class "timer-selected-value" :text "${timer_input}"))
+    ;; Кнопка старт (скрыта когда таймер активен)
+    (button :class "timer-btn-start"
+            :onclick "sh -c 'input=$(cat /tmp/timer_input_value 2>/dev/null); if [ -n \"$input\" ]; then /home/ig_ro/Документы/eww/timer/countdown_timer.sh start_custom \"$input\" && eww -c /home/ig_ro/Документы/eww/timer update timer_active=true; fi'"
+            (label :text "▶ Старт"))
+    ;; Кнопка стоп (видна когда таймер активен)
+    (button :class "timer-btn-reset"
+            :onclick "sh -c 'echo \"\" > /tmp/timer_input_value && /home/ig_ro/Документы/eww/timer/countdown_timer.sh reset && eww -c /home/ig_ro/Документы/eww/timer update timer_active=false timer_input=\"\"'"
+            (label :text "■ Стоп/Сброс"))))
+
+(defwindow timer
+  :windowtype "normal"
+   :stacking "bg"
+     :focusable "false"
+  :resizable false
+  ;; Центр экрана, под панелью
+  :geometry (geometry :x 700 :y 100 :width 120 :height 30
+                      :anchor "top left")
+  (countdown_timer))

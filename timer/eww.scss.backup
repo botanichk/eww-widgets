@@ -1,0 +1,162 @@
+$count-font-size: 24px;
+$btn-font-size: 14px;
+$padding: 20px;
+
+.countdown-timer {
+  background-color: rgba(33, 33, 37, 0.9);
+  border-radius: 20px;
+  padding: $padding;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: "Mononoki Nerd Font";
+  color: #D8DEE9;
+}
+
+.timer-display {
+  font-size: $count-font-size;
+  font-weight: bold;
+  color: #81A1C1;
+  margin-bottom: 15px;
+  font-family: "Bitcount Prop Single Light";
+}
+
+.timer-input-field {
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(50, 55, 0.8);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-input-field:focus {
+  border-color: #81A1C1;
+  background-color: rgba(60, 60, 65, 0.9);
+}
+
+.timer-input-box {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background-color: rgba(60, 65, 0.8);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timer-input-btn {
+  font-size: $btn-font-size;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(65, 69, 79, 0.8);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-input-btn:hover {
+  background-color: rgba(85, 89, 99, 0.9);
+}
+
+.timer-input-btn:active {
+  background-color: rgba(105, 109, 119, 0.9);
+}
+
+.timer-preset-btn {
+  font-size: $btn-font-size;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(65, 69, 79, 0.8);
+  color: #D8DEE9;
+  font-family: "Mononoki Nerd Font";
+  min-width: 60px;
+}
+
+.timer-preset-btn:hover {
+  background-color: rgba(85, 89, 99, 0.9);
+}
+
+.timer-preset-btn:active {
+  background-color: rgba(105, 109, 119, 0.9);
+}
+
+.timer-btn-start {
+  font-size: $btn-font-size;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(46, 160, 67, 0.9);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+  font-weight: bold;
+}
+
+.timer-btn-start:hover {
+  background-color: rgba(56, 180, 77, 0.9);
+}
+
+.timer-btn-start:active {
+  background-color: rgba(66, 200, 87, 0.9);
+}
+
+.timer-btn-reset {
+  font-size: $btn-font-size;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: rgba(200, 46, 46, 0.9);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+  font-weight: bold;
+}
+
+.timer-btn-reset:hover {
+  background-color: rgba(220, 66, 66, 0.9);
+}
+
+.timer-btn-reset:active {
+  background-color: rgba(240, 86, 86, 0.9);
+}
+
+.timer-close-btn {
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: none;
+  background-color: rgba(200, 46, 46, 0.6);
+  color: white;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-close-btn:hover {
+  background-color: rgba(220, 66, 66, 0.8);
+}
+
+.timer-selected-box {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: rgba(50, 55, 65, 0.6);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timer-selected-label {
+  font-size: 12px;
+  color: #A0AEC0;
+  font-style: italic;
+}
+
+.timer-selected-value {
+  font-size: 12px;
+  color: #81A1C1;
+  font-weight: bold;
+  font-family: "Mononoki Nerd Font";
+}
+
+.timer-presets {
+  margin-bottom: 10px;
+}
+
+.timer-header {
+  margin-bottom: 10px;
+}
