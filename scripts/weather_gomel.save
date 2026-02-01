@@ -1,0 +1,81 @@
+    echo "${feels_like}°C" > "$cache_feels_like"
+    echo "${description}" > "$cache_description"
+    echo "$(get_weather_icon "$icon_code")" > "$cache_icon"
+    echo "${wind_speed} м/с" > "$cache_wind_speed"
+    echo "$(get_wind_direction "$wind_deg")" > "$cache_wind_dir"
+    echo "${humidity}%" > "$cache_humidity"
+    echo "${pressure} гПа" > "$cache_pressure"
+    echo "$icon_code" > "$cache_icon_code"
+    echo "$city" > "$cache_city"
+    echo "$country" > "$cache_country"
+    echo "$(date '+%H:%M')" > "$cache_last_update"
+    
+    echo "Weather data updated successfully"
+}
+
+# Function to read cached data
+read_cache() {
+    local file=$1
+    if [[ -f "$file" ]]; then
+        cat "$file"
+    else
+        echo "N/A"
+    fi
+}
+
+# Main logic
+case "$1" in
+    "update")
+        fetch_weather_data
+        ;;
+    "temp")
+        read_cache "$cache_temp"
+        ;;
+    "feels_like")
+        read_cache "$cache_feels_like"
+        ;;
+    "description")
+        read_cache "$cache_description"
+        ;;
+    "icon")
+        read_cache "$cache_icon"
+        ;;
+    "wind_speed")
+        read_cache "$cache_wind_speed"
+        ;;
+    "wind_dir")
+        read_cache "$cache_wind_dir"
+        ;;
+    "humidity")
+        read_cache "$cache_humidity"
+        ;;
+    "pressure")
+        read_cache "$cache_pressure"
+        ;;
+    "city")
+        read_cache "$cache_city"
+        ;;
+    "country")
+        read_cache "$cache_country"
+        ;;
+    "last_update")
+        read_cache "$cache_last_update"
+        ;;
+    "icon_code")
+        read_cache "$cache_icon_code"
+        ;;
+    "all")
+        echo "Город: $(read_cache "$cache_city"), $(read_cache "$cache_country")"
+        echo "Температура: $(read_cache "$cache_temp") (ощущается как $(read_cache "$cache_feels_like"))"
+        echo "Описание: $(read_cache "$cache_description")"
+        echo "Ветер: $(read_cache "$cache_wind_speed") $(read_cache "$cache_wind_dir")"
+        echo "Влажность: $(read_cache "$cache_humidity")"
+        echo "Давление: $(read_cache "$cache_pressure")"
+        echo "Обновлено: $(read_cache "$cache_last_update")"
+        ;;
+    *)
+        echo "Usage: $0 {update|temp|feels_like|description|icon|wind_speed|wind_dir|humidity|pressure|city|country|last_update|icon_code|all}"
+        echo "Don't forget to set your API_KEY in the script!"
+        exit 1
+        ;;
+esac

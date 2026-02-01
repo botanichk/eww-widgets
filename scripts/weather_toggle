@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Простой скрипт для переключения виджета погоды EWW
+# Используйте его как кнопку в XFCE панели
+
+# Проверяем, запущен ли EWW daemon
+if ! pgrep -x "eww" > /dev/null; then
+    eww daemon &
+    sleep 2
+fi
+
+# Проверяем, открыт ли виджет
+if eww active-windows | grep -q "weather"; then
+    # Если виджет открыт, закрываем его
+    eww close weather
+else
+    # Обновляем данные и открываем виджет
+    ~/.config/eww/scripts/weather_openmeteo_debug update
+    eww open weather
+fi

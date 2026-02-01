@@ -1,0 +1,127 @@
+ ;; Часы БЕЗ двоеточия - ПОД ПАНЕЛЬЮ
+
+(defpoll HOUR :interval "5s" `date +"%H"`)
+(defpoll MIN  :interval "5s" `date +"%M"`)
+
+(defwidget clock []
+  (box :class "genwin" :orientation "h" :spacing 5
+    (label :class "time_hour" :text HOUR)
+    (label :class "time_min" :text MIN)))
+
+;; Погодные переменные для Гомеля, Беларусь (OpenMeteo)
+(defpoll weather_temp :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh temp")
+(defpoll weather_description :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh description")
+(defpoll weather_icon :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh icon")
+(defpoll weather_wind_speed :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh wind_speed")
+(defpoll weather_humidity :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh humidity")
+(defpoll weather_pressure :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh pressure")
+(defpoll weather_city :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh city")
+(defpoll weather_last_update :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh last_update")
+(defpoll weather_feels_like :interval "10m" "/home/ig_ro/scripts/weather-gomel.sh feels_like")
+
+;; Виджет погоды
+(defwidget weather []
+  (box :class "weather-widget"
+    :orientation "vertical"
+    :spacing 15
+    :vexpand "false"
+    :hexpand "false"
+    
+    ;; Заголовок с городом и временем обновления
+    (box :class "weather-header"
+      :orientation "horizontal"
+      :space-evenly "true"
+      (label :class "weather-city"
+              :text "${weather_city}, Беларусь")
+      (label :class "weather-update"
+              :text "Обновлено: ${weather_last_update}"))
+    
+    ;; Основная информация
+    (box :class "weather-main"
+      :orientation "horizontal"
+      :space-evenly "true"
+      :spacing 20
+      
+      ;; Иконка и температура
+      (box :orientation "vertical"
+        :space-evenly "false"
+        (label :class "weather-icon"
+                :text "${weather_icon}")
+        (label :class "weather-temp"
+                :text "${weather_temp}"))
+      
+      ;; Описание и ощущаемая температура  
+      (box :orientation "vertical"
+        :space-evenly "false"
+        (label :class "weather-description"
+                :text "${weather_description}")
+        (label :class "weather-feels"
+                :text "Ощущается как: ${weather_feels_like}")))
+    
+    ;; Детальная информация
+    (box :class "weather-details"
+      :orientation "horizontal"
+      :space-evenly "true"
+      
+      ;; Ветер
+      (box :orientation "vertical"
+        :space-evenly "false"
+        (label :class "weather-detail-label"
+                :text "Ветер")
+        (label :class "weather-detail-value"
+                :text "${weather_wind_speed}"))
+      
+      ;; Влажность
+      (box :orientation "vertical"
+        :space-evenly "false"
+        (label :class "weather-detail-label"
+                :text "Влажность")
+        (label :class "weather-detail-value"
+                :text "${weather_humidity}"))
+      
+      ;; Давление
+      (box :orientation "vertical"
+        :space-evenly "false"
+        (label :class "weather-detail-label"
+                :text "Давление")
+        (label :class "weather-detail-value"
+                :text "${weather_pressure}")))))
+
+;; Компактная версия виджета для бара
+(defwidget weather-compact []
+  (box :class "weather-compact"
+    :orientation "horizontal"
+    :spacing 8
+    (label :class "weather-compact-icon"
+            :text "${weather_icon}")
+    (label :class "weather-compact-temp"
+            :text "${weather_temp}")
+    (label :class "weather-compact-city"
+            :text "${weather_city}")))
+
+(defwindow clock
+  :windowtype "dock"
+  :stacking "fg"
+  :focusable "false"
+  :resizable false
+  ;; Центр экрана, под панелью
+  :geometry (geometry :x 555 :y 40 :width 120 :height 30)
+  (clock))
+
+;; Окно основного виджета погоды
+(defwindow weather
+  :stacking "overlay"
+  :focusable "false"
+  :monitor 0
+  :geometry (geometry :x 483 :y 50 :width 400 :height 280 :anchor "top left")
+  (weather))
+
+;; Окно компактного виджета погоды
+(defwindow weather-bar
+  :windowtype "dock"
+  :stacking "fg"
+  :focusable "false"
+  :resizable false
+  :monitor 0
+  :geometry (geometry :x 1200 :y 40 :width 200 :height 30)
+  (weather-compact))

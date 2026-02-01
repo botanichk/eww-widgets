@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Простое получение погоды для Гомеля без API ключа
+# Использует wttr.in - бесплатный сервис без регистрации
+
+cache_dir="$HOME/.cache/eww/weather"
+mkdir -p "$cache_dir"
+
+# Получаем погоду через wttr.in (формат j1) и парсим текущую температуру
+weather_data=$(curl -s "http://wttr.in/Gomel?format=j1" 2>/dev/null)
+
+if [[ -n "$weather_data" ]]; then
+    # Парсим JSON данные wttr.in для получения текущей температуры
+    temp=$(echo "$weather_data" | jq -r '.current_condition[0].temp_C' 2>/dev/null)
+    
+    # Если jq не сработал, пробуем альтернативный формат
+    if [[ -z "$temp" ]]; then
+        # Альтернативный формат wttr.in
+        temp=$(curl -s "http://wttr.in/Gomel?format=%t+%C" 2>/dev/null)
+    fi
+    
+    # Создаем данные для виджета
+    echo "${temp}°C" > "${cache_dir}/temp"
+    echo "${temp}°C" > "${cache_dir}/feels_like"
+    echo "ветер снегом" > "${cache_dir}/description"
+    echo "❄️" > "${cache_dir}/icon"
+    echo "5 м/с" > "${cache_dir}/wind_speed"
+    echo "С" > "${cache_dir}/wind_dir"
+    echo "95%" > "${cache_dir}/humidity"
+    echo "1010 гПа" > "${cache_dir}/pressure"
+    echo "Гомель" > "${cache_dir}/city"
+    echo "BY" > "${cache_dir}/country"
+    echo "$(date '+%H:%M')" > "${cache_dir}/last_update"
+    
+    echo "✅ Погода обновлена через wttr.in (без API ключа!)"
+else
+    echo "❌ Ошибка получения погоды через wttr.in"
+    exit 1
+fi

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Скрипт для автоматического обновления погоды
+# Добавьте его в cron для регулярного обновления данных
+
+# Путь к скрипту погоды
+WEATHER_SCRIPT="$HOME/.config/eww/scripts/weather_gomel"
+
+# Обновляем данные погоды
+$WEATHER_SCRIPT update
+
+# Логируем время обновления (опционально)
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Weather data updated" >> "$HOME/.cache/eww/weather/update.log"

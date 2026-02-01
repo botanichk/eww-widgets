@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Временное решение: покажем виджет с демо-данными
+# ВАМ НУЖНО БУДЕТ ЗАМЕНИТЬ API КЛЮЧ!
+
+echo "⚠️  ВНИМАНИЕ: Для работы виджета нужен API ключ!"
+echo ""
+echo "🔑 ПОЛУЧИТЕ API КЛЮЧ ЗДЕСЬ:"
+echo "   1. Зарегистрируйтесь: https://home.openweathermap.org/users/sign_up"
+echo "   2. Получите ключ: https://home.openweathermap.org/api_keys"
+echo ""
+echo "📝 ЗАМЕНИТЕ В ФАЙЛЕ ~/.config/eww/scripts/weather_gomel:"
+echo "   Найдите строку: API_KEY=\"demo_key_for_testing\""
+echo "   Замените на: API_KEY=\"ВАШ_КЛЮЧ_32_СИМВОЛА\""
+echo ""
+
+# Создаем демо-данные для показа работы виджета
+cache_dir="$HOME/.cache/eww/weather"
+mkdir -p "$cache_dir"
+
+echo "12°C" > "${cache_dir}/temp"
+echo "10°C" > "${cache_dir}/feels_like" 
+echo "переменная облачность" > "${cache_dir}/description"
+echo "☁️" > "${cache_dir}/icon"
+echo "3 м/с" > "${cache_dir}/wind_speed"
+echo "С" > "${cache_dir}/wind_dir"
+echo "75%" > "${cache_dir}/humidity"
+echo "1013 гПа" > "${cache_dir}/pressure"
+echo "Гомель" > "${cache_dir}/city"
+echo "BY" > "${cache_dir}/country"
+echo "$(date '+%H:%M')" > "${cache_dir}/last_update"
+
+echo "✅ Демо-данные созданы. Запускаем виджет..."
+echo ""
+
+# Запускаем EWW и открываем виджет
+eww daemon &
+sleep 2
+eww open weather
+
+echo ""
+echo "🌤️  ВИДЖЕТ ЗАПУЩЕН С ДЕМО-ДАННЫМИ"
+echo ""
+echo "🔄 ДЛЯ НАСТОЯЩЕЙ ПОГОДЫ:"
+echo "   1. Получите API ключ (см. выше)"
+echo "   2. Отредактируйте ~/.config/eww/scripts/weather_gomel"
+echo "   3. Выполните: ~/.config/eww/scripts/weather_gomel update"
+echo "   4. Перезагрузите: eww reload"

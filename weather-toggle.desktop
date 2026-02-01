@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Гомель
+Name[en]=Gomel Weather
+Comment=Toggle EWW weather widget for Gomel
+Comment[ru]=Переключить виджет погоды для Гомеля
+Exec=/home/ig_ro/.config/eww/scripts/weather_toggle
+Icon=weather-clear
+Terminal=false
+StartupNotify=false
+Categories=Utility;

@@ -1,0 +1,178 @@
+/** Global *******************************************/
+*{
+    all: unset;
+	font-family: Mononoki Nerd Font;
+}
+
+/** Generic window ***********************************/
+.genwin {
+	background-color: rgba(33, 33, 37, 0.9);
+	border-radius: 30px;
+}
+
+/** Profile ******************************************/
+.face {
+	background-size: 200px;
+	min-height: 200px;
+	min-width: 200px;
+	margin-top: 33px;
+	border-radius: 100%;
+}
+
+.fullname {
+	color: #EBCB8B;
+	font-size : 30px;
+    margin-bottom: 26px;
+	font-weight : bold;
+}
+
+/** Clock ********************************************/
+.time_hour, .time_min {
+	color: #81A1C1;
+	font-size :65px;
+	font-weight : bold;
+    font-family: "Bitcount Prop Single Light";
+}
+.time_hour {
+	margin : 15px 0px 0px 30px;
+}
+.time_min {
+	margin : 0px 0px 15px 0px;
+}
+
+.time_mer {
+	color: #A3BE8C;
+	font-size : 42px;
+	font-weight : bold;
+	margin : 20px 0px 0px 0px;
+    font-family: "Bitcount Prop Single Light";
+}
+
+.time_day {
+	color: #EBCB8B;
+	font-size : 35px;
+	font-weight : normal;
+	margin : 0px 0px 20px 0px;
+}
+
+/** Uptime ********************************************/
+.icontimer {
+	color: #B48EAD;
+	font-size : 82px;
+	font-weight : normal;
+    margin-right: 8px;
+}
+
+.uphour {
+	color: #E5E9F0;
+	font-size : 35px;
+	font-weight : bold;
+}
+
+.upmin {
+	color: #E5E9F0;
+	font-size : 35px;
+	font-weight : bold;
+}
+
+/** Weather Widget ************************************/
+.weather-widget {
+    background-color: rgba(33, 33, 37, 0.9);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #D8DEE9;
+    font-family: Mononoki Nerd Font;
+}
+
+.weather-header {
+    margin-bottom: 10px;
+}
+
+.weather-city {
+    font-size: 18px;
+    font-weight: bold;
+    color: #EBCB8B;
+}
+
+.weather-update {
+    font-size: 12px;
+    color: #81A1C1;
+    font-family: "Bitcount Prop Single Light";
+}
+
+.weather-main {
+    margin: 15px 0;
+}
+
+.weather-icon {
+    font-size: 64px;
+    margin-bottom: 10px;
+}
+
+.weather-temp {
+    font-size: 40px;
+    font-weight: bold;
+    color: #81A1C1;
+    font-family: "Bitcount Prop Single Light";
+    margin-top: -10px;
+}
+
+.weather-description {
+    font-size: 20px;
+    color: #EBCB8B;
+    margin-bottom: 5px;
+}
+
+.weather-feels {
+    font-size: 14px;
+    color: #A3BE8C;
+    font-family: "Bitcount Prop Single Light";
+}
+
+.weather-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-detail-label {
+    font-size: 12px;
+    color: #4C566A;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+.weather-detail-value {
+    font-size: 26px;
+    font-weight: bold;
+    color: #E5E9F0;
+    font-family: "Bitcount Prop Single Light";
+}
+
+.weather-compact {
+    background-color: rgba(33, 33, 37, 0.9);
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+.weather-compact-icon {
+    font-size: 20px;
+}
+
+.weather-compact-temp {
+    font-size: 20px;
+    font-weight: bold;
+    color: #81A1C1;
+    font-family: "Bitcount Prop Single Light";
+}
+
+.weather-compact-city {
+    font-size: 14px;
+    color: #EBCB8B;
+}
+
+/** EOF *************************************************/

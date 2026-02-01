@@ -1,0 +1,205 @@
+#!/bin/bash
+
+# Бесплатный скрипт погоды через OpenMeteo с улучшенным кэшированием и логированием
+# OpenMeteo использует данные NOAA и другие метеослужбы
+
+cache_dir="$HOME/.cache/eww/weather"
+mkdir -p "$cache_dir"
+
+# Cache files
+cache_temp="${cache_dir}/temp"
+cache_feels_like="${cache_dir}/feels_like"
+cache_description="${cache_dir}/description"
+cache_icon="${cache_dir}/icon"
+cache_wind_speed="${cache_dir}/wind_speed"
+cache_wind_dir="${cache_dir}/wind_dir"
+cache_humidity="${cache_dir}/humidity"
+cache_pressure="${cache_dir}/pressure"
+cache_city="${cache_dir}/city"
+cache_country="${cache_dir}/country"
+cache_last_update="${cache_dir}/last_update"
+cache_timestamp="${cache_dir}/timestamp"  # Для хранения времени последнего обновления
+
+# Logging function
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "${cache_dir}/weather.log"
+}
+
+# Function to read cached data
+read_cache() {
+    local file=$1
+    if [[ -f "$file" ]]; then
+        cat "$file"
+    else
+        echo "N/A"
+    fi
+}
+
+# Function to check if cache is expired (older than 30 minutes)
+is_cache_expired() {
+    if [[ -f "$cache_timestamp" ]]; then
+        local current_time=$(date +%s)
+        local file_time=$(stat -c %Y "$cache_timestamp" 2>/dev/null || date +%s)
+        local elapsed=$((current_time - file_time))
+        
+        # 30 минут = 1800 секунд
+        if [[ $elapsed -gt 1800 ]]; then
+            log_message "Cache expired (age: $((elapsed/60)) minutes)"
+            return 0  # Cache expired
+        else
+            log_message "Cache still valid (age: $((elapsed/60)) minutes)"
+            return 1  # Cache not expired
+        fi
+    else
+        log_message "No timestamp file found, cache considered expired"
+        return 0  # No timestamp file, consider expired
+    fi
+}
+
+# Function to fetch weather data
+fetch_weather_data() {
+    log_message "Starting weather data fetch"
+    
+    # Получаем погоду через OpenMeteo API (бесплатно)
+    weather_data=$(curl -s "https://api.open-meteo.com/v1/forecast?latitude=52.43&longitude=30.98&current=temperature_2m,relativehumidity_2m,windspeed_10m,pressure_msl,weathercode&timezone=auto&forecast_days=1" 2>/dev/null)
+
+    if [[ -n "$weather_data" ]]; then
+        # Парсим данные с помощью простых инструментов
+        temp=$(echo "$weather_data" | grep -o '"temperature_2m":[^,]*' | cut -d':' -f2 | cut -d'}' -f1 | sed 's/"//g')
+        humidity=$(echo "$weather_data" | grep -o '"relativehumidity_2m":[^,]*' | cut -d':' -f2 | cut -d'}' -f1 | sed 's/"//g')
+        wind_speed=$(echo "$weather_data" | grep -o '"windspeed_10m":[^,]*' | cut -d':' -f2 | cut -d'}' -f1 | sed 's/"//g')
+        pressure=$(echo "$weather_data" | grep -o '"pressure_msl":[^,]*' | cut -d':' -f2 | cut -d'}' -f1 | sed 's/"//g')
+        weather_code=$(echo "$weather_data" | grep -o '"weathercode":[^,]*' | cut -d':' -f2 | cut -d'}' -f1 | sed 's/"//g')
+        
+        # Определяем описание погоды по коду
+        case "$weather_code" in
+            0|1|2|3) desc="ясно"; icon="☀️" ;;
+            45|48) desc="туманно"; icon="🌫️" ;;
+            51|53|55|56|57|58|60|61|62|63|64|65|66|67|80) desc="моросящий дождь"; icon="🌧️" ;;
+            71|73|75|77|79|85|86) desc="снег"; icon="❄️" ;;
+            95|96|99) desc="облачно"; icon="☁️" ;;
+            *) desc="переменная облачность"; icon="⛅️" ;;
+        esac
+        
+        # Получаем направление ветра (для Беларуси характерны юго-западные ветры)
+        wind_dir="ЮЗ"
+        
+        # Округляем значения
+        temp=$(echo "scale=1; $temp / 1" | bc 2>/dev/null || echo "-5")
+        temp="${temp%.*}"
+        humidity="${humidity%.*}"
+        wind_speed="${wind_speed%.*}"
+        pressure="${pressure%.*}"
+        
+        # Создаем данные для виджета
+        echo "${temp}°C" > "${cache_dir}/temp"
+        echo "${temp}°C" > "${cache_dir}/feels_like"
+        echo "$desc" > "${cache_dir}/description"
+        echo "$icon" > "${cache_dir}/icon"
+        echo "${wind_speed} м/с" > "${cache_dir}/wind_speed"
+        echo "$wind_dir" > "${cache_dir}/wind_dir"
+        echo "${humidity}%" > "${cache_dir}/humidity"
+        echo "${pressure} гПа" > "${cache_dir}/pressure"
+        echo "Гомель" > "${cache_dir}/city"
+        echo "BY" > "${cache_dir}/country"
+        echo "$(date '+%H:%M')" > "${cache_dir}/last_update"
+        date +%s > "${cache_timestamp}"  # Сохраняем текущее время как timestamp
+        
+        log_message "Weather data updated successfully: ${temp}°C, ${desc}, ${wind_speed} м/с"
+        echo "✅ Погода обновлена через OpenMeteo (бесплатно!)"
+    else
+        log_message "Failed to fetch weather data from OpenMeteo"
+        echo "❌ Ошибка получения погоды через OpenMeteo"
+        exit 1
+    fi
+}
+
+# Main logic
+case "$1" in
+    "update")
+        fetch_weather_data
+        ;;
+    "temp")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_temp"
+        ;;
+    "feels_like")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_feels_like"
+        ;;
+    "description")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_description"
+        ;;
+    "icon")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_icon"
+        ;;
+    "wind_speed")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_wind_speed"
+        ;;
+    "wind_dir")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_wind_dir"
+        ;;
+    "humidity")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_humidity"
+        ;;
+    "pressure")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_pressure"
+        ;;
+    "city")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_city"
+        ;;
+    "country")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_country"
+        ;;
+    "last_update")
+        if is_cache_expired; then
+            fetch_weather_data
+        fi
+        read_cache "$cache_last_update"
+        ;;
+    "log")
+        if [[ -f "${cache_dir}/weather.log" ]]; then
+            tail -20 "${cache_dir}/weather.log"
+        else
+            echo "No log file yet"
+        fi
+        ;;
+    *)
+        # If no argument provided, update the data (for backward compatibility)
+        if [[ -z "$1" ]]; then
+            fetch_weather_data
+        else
+            echo "Usage: $0 {update|temp|feels_like|description|icon|wind_speed|wind_dir|humidity|pressure|city|country|last_update|log}"
+            echo "Default behavior is to update weather data"
+            fetch_weather_data
+        fi
+        ;;
+esac

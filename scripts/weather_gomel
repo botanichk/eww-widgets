@@ -1,0 +1,181 @@
+#!/bin/bash
+
+## Weather script for Gomel, Belarus
+## Requires: curl, jq
+## API: OpenWeatherMap
+
+# Cache directory
+cache_dir="$HOME/.cache/eww/weather"
+
+# Cache files
+cache_temp="${cache_dir}/temp"
+cache_feels_like="${cache_dir}/feels_like"
+cache_description="${cache_dir}/description"
+cache_icon="${cache_dir}/icon"
+cache_wind_speed="${cache_dir}/wind_speed"
+cache_wind_dir="${cache_dir}/wind_dir"
+cache_humidity="${cache_dir}/humidity"
+cache_pressure="${cache_dir}/pressure"
+cache_icon_code="${cache_dir}/icon_code"
+cache_city="${cache_dir}/city"
+cache_country="${cache_dir}/country"
+cache_last_update="${cache_dir}/last_update"
+
+# Weather configuration
+CITY_ID="627730"  # Gomel, Belarus
+API_KEY="0a4644f9bc402e646829fac81fed4359"  # Replace with your OpenWeatherMap API key
+UNITS="metric"  # metric for Celsius, imperial for Fahrenheit
+LANG="ru"  # Russian language for weather descriptions
+
+# Create cache directory if it doesn't exist
+if [[ ! -d "$cache_dir" ]]; then
+    mkdir -p "$cache_dir"
+fi
+
+# Function to get wind direction
+get_wind_direction() {
+    local degrees=$1
+    if (( degrees >= 337.5 && degrees < 22.5 )); then echo "С"
+    elif (( degrees >= 22.5 && degrees < 67.5 )); then echo "СВ"
+    elif (( degrees >= 67.5 && degrees < 112.5 )); then echo "В"
+    elif (( degrees >= 112.5 && degrees < 157.5 )); then echo "ЮВ"
+    elif (( degrees >= 157.5 && degrees < 202.5 )); then echo "Ю"
+    elif (( degrees >= 202.5 && degrees < 247.5 )); then echo "ЮЗ"
+    elif (( degrees >= 247.5 && degrees < 292.5 )); then echo "З"
+    elif (( degrees >= 292.5 && degrees < 337.5 )); then echo "СЗ"
+    else echo "С"
+    fi
+}
+
+# Function to get weather icon
+get_weather_icon() {
+    local icon_code=$1
+    case $icon_code in
+        "01d") echo "☀️" ;;  # Clear sky day
+        "01n") echo "🌙" ;;  # Clear sky night
+        "02d") echo "⛅" ;;  # Few clouds day
+        "02n") echo "☁️" ;;  # Few clouds night
+        "03d") echo "☁️" ;;  # Scattered clouds day
+        "03n") echo "☁️" ;;  # Scattered clouds night
+        "04d") echo "☁️" ;;  # Broken clouds day
+        "04n") echo "☁️" ;;  # Broken clouds night
+        "09d") echo "🌧️" ;; # Shower rain day
+        "09n") echo "🌧️" ;; # Shower rain night
+        "10d") echo "🌦️" ;; # Rain day
+        "10n") echo "🌧️" ;; # Rain night
+        "11d") echo "⛈️" ;; # Thunderstorm day
+        "11n") echo "⛈️" ;; # Thunderstorm night
+        "13d") echo "❄️" ;; # Snow day
+        "13n") echo "❄️" ;; # Snow night
+        "50d") echo "🌫️" ;; # Mist day
+        "50n") echo "🌫️" ;; # Mist night
+        *) echo "🌡️" ;;    # Default
+    esac
+}
+
+# Function to fetch weather data
+fetch_weather_data() {
+    local weather_data
+    weather_data=$(curl -sf "http://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&id=${CITY_ID}&units=${UNITS}&lang=${LANG}")
+    
+    if [[ -z "$weather_data" ]]; then
+        echo "Error: Unable to fetch weather data"
+        return 1
+    fi
+    
+    # Parse JSON data using jq
+    local temp feels_like description wind_deg wind_speed humidity pressure icon_code city country
+    temp=$(echo "$weather_data" | jq -r ".main.temp")
+    feels_like=$(echo "$weather_data" | jq -r ".main.feels_like")
+    description=$(echo "$weather_data" | jq -r ".weather[0].description")
+    wind_deg=$(echo "$weather_data" | jq -r ".wind.deg // 0")
+    wind_speed=$(echo "$weather_data" | jq -r ".wind.speed")
+    humidity=$(echo "$weather_data" | jq -r ".main.humidity")
+    pressure=$(echo "$weather_data" | jq -r ".main.pressure")
+    icon_code=$(echo "$weather_data" | jq -r ".weather[0].icon")
+    city=$(echo "$weather_data" | jq -r ".name")
+    country=$(echo "$weather_data" | jq -r ".sys.country")
+    
+    # Cache the data
+    echo "${temp}°C" > "$cache_temp"
+    echo "${feels_like}°C" > "$cache_feels_like"
+    echo "${description}" > "$cache_description"
+    echo "$(get_weather_icon "$icon_code")" > "$cache_icon"
+    echo "${wind_speed} м/с" > "$cache_wind_speed"
+    echo "$(get_wind_direction "$wind_deg")" > "$cache_wind_dir"
+    echo "${humidity}%" > "$cache_humidity"
+    echo "${pressure} гПа" > "$cache_pressure"
+    echo "$icon_code" > "$cache_icon_code"
+    echo "$city" > "$cache_city"
+    echo "$country" > "$cache_country"
+    echo "$(date '+%H:%M')" > "$cache_last_update"
+    
+    echo "Weather data updated successfully"
+}
+
+# Function to read cached data
+read_cache() {
+    local file=$1
+    if [[ -f "$file" ]]; then
+        cat "$file"
+    else
+        echo "N/A"
+    fi
+}
+
+# Main logic
+case "$1" in
+    "update")
+        fetch_weather_data
+        ;;
+    "temp")
+        read_cache "$cache_temp"
+        ;;
+    "feels_like")
+        read_cache "$cache_feels_like"
+        ;;
+    "description")
+        read_cache "$cache_description"
+        ;;
+    "icon")
+        read_cache "$cache_icon"
+        ;;
+    "wind_speed")
+        read_cache "$cache_wind_speed"
+        ;;
+    "wind_dir")
+        read_cache "$cache_wind_dir"
+        ;;
+    "humidity")
+        read_cache "$cache_humidity"
+        ;;
+    "pressure")
+        read_cache "$cache_pressure"
+        ;;
+    "city")
+        read_cache "$cache_city"
+        ;;
+    "country")
+        read_cache "$cache_country"
+        ;;
+    "last_update")
+        read_cache "$cache_last_update"
+        ;;
+    "icon_code")
+        read_cache "$cache_icon_code"
+        ;;
+    "all")
+        echo "Город: $(read_cache "$cache_city"), $(read_cache "$cache_country")"
+        echo "Температура: $(read_cache "$cache_temp") (ощущается как $(read_cache "$cache_feels_like"))"
+        echo "Описание: $(read_cache "$cache_description")"
+        echo "Ветер: $(read_cache "$cache_wind_speed") $(read_cache "$cache_wind_dir")"
+        echo "Влажность: $(read_cache "$cache_humidity")"
+        echo "Давление: $(read_cache "$cache_pressure")"
+        echo "Обновлено: $(read_cache "$cache_last_update")"
+        ;;
+    *)
+        echo "Usage: $0 {update|temp|feels_like|description|icon|wind_speed|wind_dir|humidity|pressure|city|country|last_update|icon_code|all}"
+        echo "Don't forget to set your API_KEY in the script!"
+        exit 1
+        ;;
+esac
